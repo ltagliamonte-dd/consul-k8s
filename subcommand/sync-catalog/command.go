@@ -265,7 +265,7 @@ func (c *Command) Run(args []string) int {
 				DenyK8sNamespacesSet:       denySet,
 				ExplicitEnable:             !c.flagK8SDefault,
 				ClusterIPSync:              c.flagSyncClusterIPServices,
-				OnlyEndpointsSync:           c.flagSyncOnlyEndpoints,
+				OnlyEndpointsSync:          c.flagSyncOnlyEndpoints,
 				NodePortSync:               catalogtoconsul.NodePortSyncType(c.flagNodePortSyncType),
 				ConsulK8STag:               c.flagConsulK8STag,
 				ConsulServicePrefix:        c.flagConsulServicePrefix,

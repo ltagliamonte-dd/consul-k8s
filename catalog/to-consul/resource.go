@@ -477,8 +477,8 @@ func (t *ServiceResource) generateRegistrations(key string) {
 
 	svcSpecType := svc.Spec.Type
 	if t.OnlyEndpointsSync {
-	    // Treat all service types like a ClusterIP to only sync Endpoints
-	    svcSpecType = apiv1.ServiceTypeClusterIP
+		// Treat all service types like a ClusterIP to only sync Endpoints
+		svcSpecType = apiv1.ServiceTypeClusterIP
 	}
 
 	switch svcSpecType {
