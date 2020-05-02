@@ -78,12 +78,12 @@ type ServiceResource struct {
 	// Setting this to false will ignore ClusterIP services during the sync.
 	ClusterIPSync bool
 
-	// OnlyEndpointsSync set to true (default is false) to only sync endpoints for
+	// SyncOnlyEndpoints set to true (default is false) to only sync endpoints for
 	// ClusterIP, NodePort, and LoadBalancer service types.
 	// If false, endpoints are synced for ClusterIP services,
 	// nodes are synced for NodePort services,
 	// and ingresses are synced for LoadBalancer services.
-	OnlyEndpointsSync bool
+	SyncOnlyEndpoints bool
 
 	// NodeExternalIPSync set to true (the default) syncs NodePort services
 	// using the node's external ip address. When false, the node's internal
@@ -293,7 +293,7 @@ func (t *ServiceResource) shouldTrackEndpoints(key string) bool {
 	// The service must be one we care about for us to watch the endpoints.
 	// We care about a service that exists in our service map (is enabled
 	// for syncing) and is a NodePort or ClusterIP type since only those
-	// types use endpoints. If OnlyEndpointsSync is enabled, then we will
+	// types use endpoints. If SyncOnlyEndpoints is enabled, then we will
 	// also track endpoints for a LoadBalancer type service.
 	if t.serviceMap == nil {
 		return false
@@ -303,7 +303,7 @@ func (t *ServiceResource) shouldTrackEndpoints(key string) bool {
 		return false
 	}
 
-	if t.OnlyEndpointsSync {
+	if t.SyncOnlyEndpoints {
 		return svc.Spec.Type == apiv1.ServiceTypeNodePort || svc.Spec.Type == apiv1.ServiceTypeClusterIP || svc.Spec.Type == apiv1.ServiceTypeLoadBalancer
 	}
 	return svc.Spec.Type == apiv1.ServiceTypeNodePort || svc.Spec.Type == apiv1.ServiceTypeClusterIP
@@ -476,7 +476,7 @@ func (t *ServiceResource) generateRegistrations(key string) {
 	}
 
 	svcSpecType := svc.Spec.Type
-	if t.OnlyEndpointsSync {
+	if t.SyncOnlyEndpoints {
 		// Treat all service types like a ClusterIP to only sync Endpoints
 		svcSpecType = apiv1.ServiceTypeClusterIP
 	}
